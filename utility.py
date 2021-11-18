@@ -262,3 +262,21 @@ def show_param_dependency(m, X_train, Y_train, X_test, Y_test, param_name, param
     plot(param_vals, losses)
     print('Min %s = %.4f for %s=%s' % (loss_fun, min(losses), param_name, param_vals[argmin(losses)]) ) 
 	
+
+
+def plot_classifier_decision(classifier, X, y, plot_scatter=True, margin=0.1):
+    x_range = X[:, 0].min() - margin, X[:, 0].max() + margin
+    y_range = X[:, 1].min() - margin, X[:, 1].max() + margin
+    xx, yy = numpy.meshgrid(numpy.linspace(*x_range, num=200),
+                            numpy.linspace(*y_range, num=200))
+    data = numpy.vstack([xx.flatten(), yy.flatten()]).T
+
+    p = classifier.predict_proba(data)[:, 1]
+    plt.contourf(xx, yy, p.reshape(xx.shape), cmap='bwr', alpha=.5)
+    if plot_scatter:
+        plt.scatter(X[:, 0], X[:, 1], c=y, cmap='bwr', s=30)
+
+    plt.xlim(*x_range)
+    plt.ylim(*y_range)
+
+    
